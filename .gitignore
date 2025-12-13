@@ -1,0 +1,37 @@
+# Keil MDK-ARM Build Output Directories
+MDK-ARM/Listings/
+MDK-ARM/Objects/
+MDK-ARM/RTE/
+MDK-ARM/DebugConfig/
+
+# Keil MDK-ARM Temporary/Intermediate Files
+*.o
+*.d
+*.crf
+*.dep
+*.lnp
+*.axf
+*.elf
+*.hex
+*.map
+*.htm
+*.lst
+*.sct
+*.iex
+
+# Keil User-Specific Configuration (Layout, Breakpoints)
+# uvprojx is the project file (KEEP), uvoptx is the user settings (IGNORE)
+*.uvguix.*
+*.uvoptx
+
+# Debugger Logs
+JLinkLog.txt
+*.jlink
+
+# Editor/IDE folders (VSCode, etc.)
+.vscode/
+.idea/
+
+# OS Specific
+Thumbs.db
+Desktop.ini
