@@ -20,6 +20,10 @@
 
 #include "os_cpu.h"
 #include "os_types.h"
-  
+
+typedef struct Task_Control_Block
+{
+    volatile uint32_t *stackPtr;
+} OS_TCB;
 
 #endif /* __OS_CORE_H */

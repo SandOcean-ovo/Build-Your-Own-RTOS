@@ -45,7 +45,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+OS_TCB Task1TCB;
 
+uint32_t Task1stack[128];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,52 +58,10 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-__asm int asm_add(int a, int b)
+void Task1(void)
 {
-  ADD R0, R0, R1 
-  BX LR 
+  for(;;);
 }
-
-__asm uint32_t get_msp_val()
-{
-  MRS R0, MSP
-  BX LR
-}
-
-__asm uint32_t get_psp_val()
-{
-  MRS R0, PSP
-  BX LR
-}
-
-__asm void save_context_test()
-{
-  MRS R0, PSP
-  STMDB R0!, {R4-R11}
-  MOV R4, R0
-  BX LR
-}
-
-__asm void set_registers(void) 
-{
-  MOV R0, #0X11111111
-  MOV R1, #0X22222222
-  MOV R2, #0X33333333
-  MOV R3, #0X44444444
-
-  BX LR
-}
-
-__asm void create_fake_task()
-{
-  MOV R0, #0x20002000
-  MSR PSP, R0
-  MOV R0, #2
-  MSR CONTROL, R0
-  ISB  // 指令同步隔离，确保程序生效
-  BX LR
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -134,7 +94,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  Task1TCB.stackPtr = Task_Stack_Init(Task1, Task1stack, 128);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -22,6 +22,14 @@
 
 /* 函数声明 ---------------------------------------------------------------- */
 
+/** 
+ * @brief 任务栈初始化 
+ */
+uint32_t* Task_Stack_Init(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth);
 
+/** 
+ * @brief 任务异常结束钩子函数
+ */
+void Task_End_Hook(void);
 
 #endif /* __OS_CPU_H */
