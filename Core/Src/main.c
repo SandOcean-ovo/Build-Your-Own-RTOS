@@ -82,6 +82,26 @@ __asm void save_context_test()
   BX LR
 }
 
+__asm void set_registers(void) 
+{
+  MOV R0, #0X11111111
+  MOV R1, #0X22222222
+  MOV R2, #0X33333333
+  MOV R3, #0X44444444
+
+  BX LR
+}
+
+__asm void create_fake_task()
+{
+  MOV R0, #0x20002000
+  MSR PSP, R0
+  MOV R0, #2
+  MSR CONTROL, R0
+  ISB  // 指令同步隔离，确保程序生效
+  BX LR
+}
+
 /* USER CODE END 0 */
 
 /**
