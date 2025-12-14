@@ -18,7 +18,7 @@
 
 ; 4. 导出符号 (相当于 C 语言的头文件声明，让别人能调用它)
 ;    PendSV_Handler 是 STM32 启动文件里默认的中断名
-    EXPORT  PendSV_Handler
+;    EXPORT  PendSV_Handler
 
 
 ; 5. 引入外部符号 (相当于 C 语言的 extern，我们要访问 C 里的变量)
