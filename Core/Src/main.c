@@ -56,6 +56,31 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+__asm int asm_add(int a, int b)
+{
+  ADD R0, R0, R1 
+  BX LR 
+}
+
+__asm uint32_t get_msp_val()
+{
+  MRS R0, MSP
+  BX LR
+}
+
+__asm uint32_t get_psp_val()
+{
+  MRS R0, PSP
+  BX LR
+}
+
+__asm void save_context_test()
+{
+  MRS R0, PSP
+  STMDB R0!, {R4-R11}
+  MOV R4, R0
+  BX LR
+}
 
 /* USER CODE END 0 */
 
