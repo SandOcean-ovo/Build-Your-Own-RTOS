@@ -22,14 +22,14 @@
 
 /* 函数声明 ---------------------------------------------------------------- */
 
-/** 
- * @brief 任务栈初始化 
+/**
+ * @brief  初始化任务栈
+ * @param  task_entry: 任务入口函数地址
+ * @param  stack_top : 栈数组的起始地址（低地址）
+ * @param  stack_size: 栈大小（单位：元素个数，不是字节）
+ * @return uint32_t* : 初始化后的栈顶指针 (SP)
  */
-uint32_t* Task_Stack_Init(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth);
+uint32_t* OS_StackInit(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth);
 
-/** 
- * @brief 任务异常结束钩子函数
- */
-void Task_End_Hook(void);
 
 #endif /* __OS_CPU_H */

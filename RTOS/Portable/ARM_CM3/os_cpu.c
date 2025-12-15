@@ -15,7 +15,12 @@
 
 #include "os_cpu.h"
 
-uint32_t* Task_Stack_Init(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth)
+void OS_TaskReturn(void)
+{
+  for(;;);
+}
+
+uint32_t* OS_StackInit(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth)
 {
   /* 第一步：找到栈顶 */
   uint32_t* sp = stack_init_address + stack_depth;
@@ -27,7 +32,7 @@ uint32_t* Task_Stack_Init(void* task_function, uint32_t* stack_init_address, uin
   /* 硬件区 */
   *(--sp) = (uint32_t)0x01000000; // xPSR
   *(--sp) = (uint32_t)task_function; // PC
-  *(--sp) = (uint32_t)Task_End_Hook; // LR
+  *(--sp) = (uint32_t)OS_TaskReturn; // LR
   *(--sp) = (uint32_t)0x12121212; // R12 
   *(--sp) = (uint32_t)0x03030303; // R3
   *(--sp) = (uint32_t)0x02020202; // R2
@@ -48,7 +53,4 @@ uint32_t* Task_Stack_Init(void* task_function, uint32_t* stack_init_address, uin
   return sp;
 }
 
-void Task_End_Hook(void)
-{
-  for(;;);
-}
+

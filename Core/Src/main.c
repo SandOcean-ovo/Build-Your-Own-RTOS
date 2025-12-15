@@ -94,7 +94,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  Task1TCB.stackPtr = Task_Stack_Init(Task1, Task1stack, 128);
+  Task1TCB.stackPtr = OS_StackInit(Task1, Task1stack, 128);
   /* USER CODE END 2 */
 
   /* Infinite loop */
