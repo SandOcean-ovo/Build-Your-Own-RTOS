@@ -18,7 +18,8 @@
 
 ; 4. 导出符号 (相当于 C 语言的头文件声明，让别人能调用它)
 ;    PendSV_Handler 是 STM32 启动文件里默认的中断名
-    EXPORT  PendSV_Handler
+;    EXPORT  PendSV_Handler
+;    最好写在每个函数开头
 
 
 ; 5. 引入外部符号 (相当于 C 语言的 extern，我们要访问 C 里的变量)
@@ -34,6 +35,7 @@
 ; 函数：PendSV_Handler
 ; -----------------------------------------
 PendSV_Handler  PROC  ; PROC代表函数的开头
+    EXPORT  PendSV_Handler
     CPSID I ; 关中断
     MRS R0, PSP
     ISB ; 指令同步隔离，确保程序生效
@@ -60,7 +62,23 @@ RestoreContext
     BX LR
     ENDP
 
+OS_Start PROC
+    EXPORT  OS_Start
+    ; 1. 设置PendSV的优先级为最低(0xFF)
+    ; 这一步我们在C语言中做
+    
+    ; 2. 触发PendSV，这里实际上就是我们的OS_Yield函数
+    LDR R0, =0xE000ED04 ; ICSR寄存器地址
+    LDR R1, =0x10000000 ; 第28位是PENDSVSET
+    STR R1, [R0]        ; 写1触发PendSV
 
+    ; 3. 开中断 (防止之前被关了)
+    CPSIE I
+
+    ; 4. 死循环 (理论上永远不会执行到这里，因为PendSV会立即抢占并切换走)
+    B .                 
+    
+    ENDP
 
 
 
