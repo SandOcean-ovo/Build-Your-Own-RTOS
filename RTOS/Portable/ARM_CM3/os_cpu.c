@@ -15,6 +15,7 @@
 
 #include "os_cpu.h"
 
+
 void OS_TaskReturn(void)
 {
   for(;;);
@@ -53,4 +54,24 @@ uint32_t* OS_StackInit(void* task_function, uint32_t* stack_init_address, uint32
   return sp;
 }
 
+void OS_Init_Timer(uint32_t ms)
+{
+    uint32_t ticks = 72000000 * ms / 1000;
+
+    if(SysTick_Config(ticks)){
+        while(1); /* 配置失败了，死循环 */
+    }
+
+    /* 设置优先级 */
+    NVIC_SetPriority(PendSV_IRQn, 15); 
+    
+    NVIC_SetPriority(SysTick_IRQn, 14); 
+
+    __enable_irq(); // 开全局中断
+}
+
+void OS_Trigger_PendSV(void)
+{
+    SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+}
 

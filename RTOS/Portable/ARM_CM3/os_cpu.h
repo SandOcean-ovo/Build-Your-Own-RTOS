@@ -19,6 +19,7 @@
 #define __OS_CPU_H
 
 #include <stdint.h>
+#include "stm32f1xx.h"
 
 /* 函数声明 ---------------------------------------------------------------- */
 
@@ -31,5 +32,15 @@
  */
 uint32_t* OS_StackInit(void* task_function, uint32_t* stack_init_address, uint32_t stack_depth);
 
+/**
+ * @brief  初始化SysTick
+ * @param  ms: 时间片长度（单位ms） 
+ */
+void OS_Init_Timer(uint32_t ms);
+
+/**
+ * @brief  触发PendSV中断
+ */
+void OS_Trigger_PendSV(void);
 
 #endif /* __OS_CPU_H */

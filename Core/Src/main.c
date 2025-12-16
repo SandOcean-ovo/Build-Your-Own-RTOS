@@ -46,8 +46,13 @@
 
 /* USER CODE BEGIN PV */
 OS_TCB Task1TCB;
+OS_TCB Task2TCB;
 
 uint32_t Task1stack[128];
+uint32_t Task2stack[128];
+
+uint32_t count1 = 0;
+uint32_t count2 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,8 +65,19 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void Task1(void)
 {
-  for(;;);
+  for(;;){
+    count1++;
+  }
 }
+
+void Task2(void)
+{
+  for(;;){
+    count2++;
+  }
+}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -94,7 +110,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  Task1TCB.stackPtr = OS_StackInit(Task1, Task1stack, 128);
+  OS_TaskCreate(&Task1TCB, Task1, Task1stack, 128);
+  OS_TaskCreate(&Task2TCB, Task2, Task2stack, 128);
+  OS_StartScheduler();
   /* USER CODE END 2 */
 
   /* Infinite loop */
