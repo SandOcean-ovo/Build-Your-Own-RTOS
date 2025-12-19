@@ -29,6 +29,7 @@ typedef struct Task_Control_Block
 {
     volatile uint32_t *stackPtr; ///< 任务对应的栈指针
     struct Task_Control_Block *Next; ///< 指向下一个任务的指针
+    volatile uint32_t DelayTicks; ///< 延时的时间（单位ms）
 } OS_TCB;
 
 /* 全局变量声明 -------------------------------------------------------- */
@@ -57,5 +58,12 @@ void OS_StartScheduler(void);
  * @brief  处理SysTick中断的“回调函数”
  */
 void OS_Tick_Handler(void);
+
+/**
+ * @brief  任务阻塞延时
+ * @param  ticks: 延时的时间长度（单位ms）
+ */
+void OS_Delay(uint32_t ticks);
+
 
 #endif /* __OS_CORE_H */

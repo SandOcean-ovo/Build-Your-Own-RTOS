@@ -19,12 +19,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "gpio.h"
-#include "os_core.h"
-#include <stdint.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "os_core.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,8 +46,8 @@
 OS_TCB Task1TCB;
 OS_TCB Task2TCB;
 
-uint32_t Task1stack[128];
-uint32_t Task2stack[128];
+uint32_t Task1stack[256];
+uint32_t Task2stack[256];
 
 uint32_t count1 = 0;
 uint32_t count2 = 0;
@@ -63,31 +61,19 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void OS_Yield(void) 
-{
-    // 设置第 28 位 (PENDSVSET)，触发 PendSV 异常
-    (*(volatile uint32_t *)0xE000ED04) = (1 << 28);
-    
-    // 指令同步
-    __asm("DSB"); 
-    __asm("ISB");
-}
-
 void Task1(void)
 {
   for(;;){
-    count1++;
-    NextTCB = &Task2TCB;
-    OS_Yield();
+    HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+    OS_Delay(500);
   }
 }
 
 void Task2(void)
 {
   for(;;){
-    count2++;
-    NextTCB = &Task1TCB;
-    OS_Yield();
+    HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
+    OS_Delay(500);
   }
 }
 
@@ -124,17 +110,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  // 1. 设置 PendSV 优先级为最低 (0xFF)
-  NVIC_SetPriority(PendSV_IRQn, 0xFF); // 这里中断优先级实际上只接收4位，即只有最低4位有效 这么写也没问题
-
-  // 2. 关键初始化
-  Task1TCB.stackPtr = OS_StackInit(Task1, Task1stack, 128);
-  Task2TCB.stackPtr = OS_StackInit(Task2, Task2stack, 128);
-  CurrentTCB = 0;       // 必须设为NULL，告诉汇编这是第一次
-  NextTCB = &Task1TCB; // 告诉 OS 第一个任务是谁
-
-  // 3. 启动！
-  OS_Start();
+  OS_TaskCreate(&Task1TCB, Task1, Task1stack, 256);
+  OS_TaskCreate(&Task2TCB, Task2, Task2stack, 256);
+  OS_StartScheduler();
   /* USER CODE END 2 */
 
   /* Infinite loop */

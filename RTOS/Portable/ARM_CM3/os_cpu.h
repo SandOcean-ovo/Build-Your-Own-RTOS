@@ -43,4 +43,14 @@ void OS_Init_Timer(uint32_t ms);
  */
 void OS_Trigger_PendSV(void);
 
+/**
+ * @brief  打开全局中断
+ */
+void OS_Enable_IRQ(void);
+
+/**
+ * @brief  关闭全局中断
+ */
+void OS_Disable_IRQ(void);
+
 #endif /* __OS_CPU_H */

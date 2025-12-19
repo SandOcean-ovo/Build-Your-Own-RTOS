@@ -62,23 +62,7 @@ RestoreContext
     BX LR
     ENDP
 
-OS_Start PROC
-    EXPORT  OS_Start
-    ; 1. 设置PendSV的优先级为最低(0xFF)
-    ; 这一步我们在C语言中做
-    
-    ; 2. 触发PendSV，这里实际上就是我们的OS_Yield函数
-    LDR R0, =0xE000ED04 ; ICSR寄存器地址
-    LDR R1, =0x10000000 ; 第28位是PENDSVSET
-    STR R1, [R0]        ; 写1触发PendSV
 
-    ; 3. 开中断 (防止之前被关了)
-    CPSIE I
-
-    ; 4. 死循环 (理论上永远不会执行到这里，因为PendSV会立即抢占并切换走)
-    B .                 
-    
-    ENDP
 
 
 

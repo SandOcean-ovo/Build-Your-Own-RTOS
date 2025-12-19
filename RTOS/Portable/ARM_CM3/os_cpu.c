@@ -34,21 +34,21 @@ uint32_t* OS_StackInit(void* task_function, uint32_t* stack_init_address, uint32
   *(--sp) = (uint32_t)0x01000000; // xPSR
   *(--sp) = (uint32_t)task_function; // PC
   *(--sp) = (uint32_t)OS_TaskReturn; // LR
-  *(--sp) = (uint32_t)0x12121212; // R12 
-  *(--sp) = (uint32_t)0x03030303; // R3
-  *(--sp) = (uint32_t)0x02020202; // R2
-  *(--sp) = (uint32_t)0x01010101; // R1
-  *(--sp) = (uint32_t)0x00000000; // R0
+  *(--sp) = (uint32_t)0x0; // R12 
+  *(--sp) = (uint32_t)0x0; // R3
+  *(--sp) = (uint32_t)0x0; // R2
+  *(--sp) = (uint32_t)0x0; // R1
+  *(--sp) = (uint32_t)0x0; // R0
 
   /* 软件区 */
-  *(--sp) = (uint32_t)0x11111111; // R11
-  *(--sp) = (uint32_t)0x10101010; // R10
-  *(--sp) = (uint32_t)0x09090909; // R9
-  *(--sp) = (uint32_t)0x08080808; // R8
-  *(--sp) = (uint32_t)0x07070707; // R7
-  *(--sp) = (uint32_t)0x06060606; // R6
-  *(--sp) = (uint32_t)0x05050505; // R5
-  *(--sp) = (uint32_t)0x04040404; // R4
+  *(--sp) = (uint32_t)0x0; // R11
+  *(--sp) = (uint32_t)0x0; // R10
+  *(--sp) = (uint32_t)0x0; // R9
+  *(--sp) = (uint32_t)0x0; // R8
+  *(--sp) = (uint32_t)0x0; // R7
+  *(--sp) = (uint32_t)0x0; // R6
+  *(--sp) = (uint32_t)0x0; // R5
+  *(--sp) = (uint32_t)0x0; // R4
 
   /* 第四步：返回sp */
   return sp;
@@ -75,3 +75,12 @@ void OS_Trigger_PendSV(void)
     SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
+void OS_Enable_IRQ(void)
+{
+  __enable_irq();
+}
+
+void OS_Disable_IRQ(void)
+{
+  __disable_irq();
+}
