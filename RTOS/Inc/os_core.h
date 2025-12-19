@@ -22,6 +22,15 @@
 #include "os_types.h"
 #include <stddef.h>
 
+/* 数据结构定义 -------------------------------------------------------- */
+
+/**
+ * @brief  任务状态枚举 
+ */
+typedef enum {
+    TASK_READY = 0,  ///< 就绪：随时可以跑
+    TASK_BLOCKED,    ///< 阻塞：在等时间，或者等信号量
+} OS_TaskState;
 /**
  * @brief  任务控制块结构体定义 
  */
@@ -29,8 +38,21 @@ typedef struct Task_Control_Block
 {
     volatile uint32_t *stackPtr; ///< 任务对应的栈指针
     struct Task_Control_Block *Next; ///< 指向下一个任务的指针
+    OS_TaskState State; ///< 任务状态
     volatile uint32_t DelayTicks; ///< 延时的时间（单位ms）
+    struct Task_Control_Block *NextWaitTask ///< 指向下一个正在等待同一个信号量的任务
 } OS_TCB;
+
+/**
+ * @brief  信号量结构体定义 
+ */
+typedef struct Semaphore
+{
+    volatile uint16_t count;
+    OS_TCB  *WaitListHead; 
+    OS_TCB  *WaitListTail;
+} OS_Sem;
+
 
 /* 全局变量声明 -------------------------------------------------------- */
 extern volatile uint32_t g_SystemTickCount;
@@ -65,5 +87,28 @@ void OS_Tick_Handler(void);
  */
 void OS_Delay(uint32_t ticks);
 
+/**
+ * @brief  进入临界区
+ */
+void OS_EnterCritical(void);
+
+/**
+ * @brief  退出临界区
+ */
+void OS_ExitCritical(void);
+
+/**
+ * @brief  等待信号量
+ * @param  p_sem: 指向信号量的指针变量
+ * @return uint8_t: 只会返回 1，代表接收到信号量
+ */
+uint8_t OS_SemWait(OS_Sem *p_sem);
+
+/**
+ * @brief  发送信号量
+ * @param  p_sem: 指向信号量的指针变量
+ * @return uint8_t: 只会返回 1，代表发送出信号量
+ */
+uint8_t OS_SemPost(OS_Sem *p_sem);
 
 #endif /* __OS_CORE_H */

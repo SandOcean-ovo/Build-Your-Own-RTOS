@@ -51,6 +51,12 @@ uint32_t Task2stack[256];
 
 uint32_t count1 = 0;
 uint32_t count2 = 0;
+
+OS_Sem Sem = {
+  .count = 0,
+  .WaitListHead = NULL,
+  .WaitListTail = NULL
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -64,16 +70,29 @@ void SystemClock_Config(void);
 void Task1(void)
 {
   for(;;){
-    HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-    OS_Delay(500);
+    if(OS_SemWait(&Sem)){
+      HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
+    }
   }
 }
 
 void Task2(void)
 {
   for(;;){
-    HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
-    OS_Delay(500);
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_RESET)
+    {
+      OS_Delay(20);
+      if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_RESET)
+      {
+        OS_SemPost(&Sem);
+
+        while (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) == GPIO_PIN_RESET)
+        {
+          OS_Delay(10); // 每次检测间隔10ms，让出CPU
+        }
+      }
+    }
+    OS_Delay(10);
   }
 }
 
